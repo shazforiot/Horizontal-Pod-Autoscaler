@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploymentnginx
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "250m"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxservice
+  labels:
+    app: nginx   
+spec:  
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      nodePort: 31050
+      targetPort: nginxwebport
